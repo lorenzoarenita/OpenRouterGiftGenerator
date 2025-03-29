@@ -85,7 +85,7 @@ Este proyecto es un único archivo HTML estático. No requiere instalación.
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE.md` (si existe) para más detalles.
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
 
 ## Contacto
 
