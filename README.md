@@ -2,16 +2,19 @@
 
 Herramienta simple en un único archivo HTML para generar bancos de preguntas en formato **GIFT** (Opción Múltiple y Verdadero/Falso) para **Moodle**, utilizando la IA de **Google Gemini**. ¡Descarga y úsalo directamente en tu navegador!
 
-## Captura de Pantalla / Demo
-
-![Captura de Pantalla del Proyecto](URL_A_LA_IMAGEN_O_PLACEHOLDER)
-*(Opcional: puedes añadir un enlace a una demo en vivo aquí: [Link a Demo en Vivo](URL_DEMO_SI_EXISTE))*
+## Capturas de Pantalla
+Interfaz de usuario
+![Captura de Pantalla del Proyecto](image-1.png)
+Detalle de preguntas generadas
+![Captura de Pantalla del Proyecto](image-2.png)
 
 ## Características Principales
 
 *   **Generación Automática con IA:** Crea preguntas GIFT utilizando la API de Google Gemini.
 *   **Tipos de Pregunta:** Soporta la generación de preguntas de **Opción Múltiple** y **Verdadero/Falso**.
 *   **Interfaz Sencilla:** Todas las funcionalidades están contenidas en un **único archivo `index.html`**. No requiere instalación ni servidor.
+*   **Selección de Preguntas:** Permite seleccionar individualmente las preguntas deseadas (y válidas) de la vista previa.
+*   **Vista Previa Interactiva:** Muestra las preguntas generadas antes de descargar, permitiendo revisar el formato, las respuestas y el feedback. Incluye manejo visual de errores de formato GIFT.
 *   **Conexión API Segura:** Requiere una clave API de Google Gemini (con opción de mostrar/ocultar).
 *   **Selección de Modelo Gemini:** Permite elegir el modelo específico de Gemini a utilizar (cargado dinámicamente tras introducir la API Key).
 *   **Configuración Flexible:**
@@ -22,8 +25,6 @@ Herramienta simple en un único archivo HTML para generar bancos de preguntas en
         *   Número de respuestas por pregunta.
         *   Permitir múltiples respuestas correctas (con puntuación parcial).
         *   Aplicar penalizaciones configurables para respuestas incorrectas.
-*   **Vista Previa Interactiva:** Muestra las preguntas generadas antes de descargar, permitiendo revisar el formato, las respuestas y el feedback. Incluye manejo visual de errores de formato GIFT.
-*   **Selección de Preguntas:** Permite seleccionar individualmente las preguntas deseadas (y válidas) de la vista previa.
 *   **Descarga Fácil:**
     *   Botón para descargar **todas** las preguntas generadas en un archivo `.gift`.
     *   Botón para descargar únicamente las preguntas **seleccionadas** en un archivo `.gift`.
@@ -50,12 +51,12 @@ Este proyecto es un único archivo HTML estático. No requiere instalación.
 
 1.  **Clona o descarga el repositorio:**
     ```bash
-    git clone URL_DEL_REPOSITORIO
+    git clone https://github.com/soyunomas/GeminiGiftGenerator
     ```
     O descarga el archivo `index.html` directamente.
 2.  **Navega al directorio (si clonaste):**
     ```bash
-    cd NOMBRE_DEL_DIRECTORIO
+    cd GeminiGiftGenerator
     ```
 3.  **Abre el archivo `index.html` en tu navegador web moderno.**
 
@@ -82,8 +83,7 @@ Este proyecto es un único archivo HTML estático. No requiere instalación.
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE.md` (si existe) para más detalles.
-*(Sugerencia: Añade un archivo LICENSE.md con el texto de la licencia MIT si aún no lo tienes)*.
 
 ## Contacto
 
-Creado por **[Tu Nombre/Usuario GitHub]** - **[Tu Email o Red Social (Opcional)]**
+Creado por **soyunomas**
