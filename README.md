@@ -83,6 +83,35 @@ Este proyecto es un único archivo HTML estático. No requiere instalación.
 12. Utiliza los botones "**Descargar Todo**" o "**Descargar Selección**" para obtener el archivo `.gift`. La descarga de selección excluirá automáticamente las preguntas marcadas con error.
 13. Importa el archivo `.gift` descargado en tu banco de preguntas de Moodle.
 
+## Pre-configurar API Key (Opcional)
+
+Si deseas distribuir o utilizar esta herramienta con una API Key ya configurada (por ejemplo, para uso interno o demostraciones rápidas sin que cada usuario necesite la suya), puedes insertarla directamente en el código fuente.
+
+1.  Abre el archivo `index.html` con un editor de texto.
+2.  Busca la sección `<script>` al final del archivo.
+3.  Localiza la constante llamada `API_KEY` cerca del inicio del script.
+4.  Introduce tu clave API de Gemini entre las comillas dobles `""`.
+
+**Ejemplo:**
+
+```javascript
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Constante para API Key (opcional) ---
+            // Si quieres pre-cargar una API Key, ponla aquí entre las comillas.
+            // Si la dejas vacía "", el usuario deberá introducirla manualmente.
+            const API_KEY = "AQUÍ_VA_TU_CLAVE_API_DE_GEMINI"; // <-- MODIFICA AQUÍ
+
+            // --- Elementos del DOM ---
+            const apiKeyInput = document.getElementById('gemini-api-key');
+            // ... resto del código JavaScript ...
+        });
+    </script>
+```
+**¡Advertencia de Seguridad Importante!** ⚠️
+
+> Incrustar tu clave API directamente en el código HTML/JavaScript significa que **cualquier persona que tenga acceso al archivo podrá verla**. **NO subas este archivo con tu clave API personal a un repositorio público (como GitHub)**, ya que expondrías tu clave y podrías incurrir en costes si alguien la utiliza. Esta opción es más adecuada para uso estrictamente personal, local o en distribuciones muy controladas donde confías plenamente en los usuarios que tendrán acceso al código fuente. La forma recomendada y segura es que cada usuario introduzca su propia clave API en la interfaz web.
+
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
