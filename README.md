@@ -2,7 +2,7 @@
 
 Herramienta simple en un único archivo HTML para generar bancos de preguntas en formato **GIFT** (Opción Múltiple y Verdadero/Falso) para **Moodle**, utilizando la IA de **Google Gemini**. ¡Descarga y úsalo directamente en tu navegador!
 
-## Capturas de Pantalla
+## Capturas de Pantalla / Demo
 * Interfaz de usuario:
 
 ![Captura de Pantalla del Proyecto](image-1.png)
@@ -10,6 +10,8 @@ Herramienta simple en un único archivo HTML para generar bancos de preguntas en
 * Detalle de preguntas generadas con posibilidad de seleccionar las que queramos para luego descargarlas:
   
 ![Captura de Pantalla del Proyecto](image-2.png)
+
+*Puedes probar una demostración en vivo aquí: [Link a Demo en Vivo](https://soyunomas.github.io/GeminiGiftGenerator/index.html)*
 
 ## Características Principales
 
