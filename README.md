@@ -144,7 +144,7 @@ Puedes incrustar una API Key directamente en el código fuente (lee la advertenc
                 // --- Variables Generador (igual) ---
                 const loadInSimulatorButton = document.getElementById('load-in-simulator-button');
                 const loadSelectedInSimulatorButton = document.getElementById('load-selected-in-simulator-button');
-                const API_KEY = ""; // -- Poner tu API-KEY aquí ---
+                const API_KEY = "AQUI-PONES-TU-API-KEY"; // -- Poner tu API-KEY aquí ---
                 const apiKeyInput = document.getElementById('gemini-api-key');
                 const showApiKeyButton = document.getElementById('show-api-key');
                 // ... resto del código JavaScript del generador ...
