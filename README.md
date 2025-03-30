@@ -128,8 +128,8 @@ Este proyecto es un único archivo HTML estático.
 Puedes incrustar una API Key directamente en el código fuente (lee la advertencia de seguridad más abajo).
 
 1.  Abre `index.html` con un editor.
-2.  Busca el **primer** bloque `<script>` (el del generador).
-3.  Localiza la constante `API_KEY` cerca del inicio de la función `DOMContentLoaded`.
+2.  Localiza la constante `API_KEY` cerca del inicio de la función `DOMContentLoaded`.
+3.  Está marcado con // -- Poner tu API-KEY aquí ---
 4.  Introduce tu clave entre las comillas `""`.
 
 **Ejemplo:**
