@@ -1,5 +1,6 @@
 # Generador y Simulador Banco Preguntas GIFT Moodle
-
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/soyunomas/GeminiGiftGenerator/blob/main/LICENSE)
+[![Demo](https://img.shields.io/badge/Demo-Live-brightgreen)](https://soyunomas.github.io/GeminiGiftGenerator/index.html)
 Herramienta integrada en un único archivo HTML que combina dos funcionalidades principales mediante pestañas:
 
 1.  **Generador GIFT:** Crea bancos de preguntas en formato **GIFT** (Opción Múltiple y Verdadero/Falso) para **Moodle**, utilizando la IA de **Google Gemini**.
