@@ -9,7 +9,7 @@ Herramienta integrada en un único archivo HTML que combina dos funcionalidades 
 
 ¡Descarga el archivo `index.html` y úsalo directamente en tu navegador!
 
-*Puedes probar una demostración en vivo aquí: [Link a Demo en Vivo](https://soyunomas.github.io/GeminiGiftGenerator/index.html)* <!-- Actualiza si la URL de demo cambia -->
+*Puedes probar una demostración en vivo aquí: [Link a Demo en Vivo](https://lorenzoarenita.github.io/OpenRouterGiftGenerator/index.html)* <!-- Actualiza si la URL de demo cambia -->
 
 ## Capturas de Pantalla
 * Interfaz de usuario generador de preguntas:
