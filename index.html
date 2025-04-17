@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador y Simulador GIFT Moodle (Modelo Exacto)</title> <!-- Título Actualizado -->
+    <title>Generador y Simulador GIFT Moodle</title> <!-- Título Actualizado -->
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Font Awesome CSS -->
@@ -16,6 +16,7 @@
         .question-container { border: 1px solid #dee2e6; padding: 15px; margin-bottom: 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out; background-color: #fff; }
         .question-container:hover { background-color: #f1f3f5; border-color: #adb5bd; } .question-container.selected { background-color: #e7f5ff; border-color: #91d5ff; }
         .answer-option { margin-left: 20px; padding: 3px 0; } .answer-option i { font-size: 0.9em; width: 18px; } .question-checkbox { display: none; }
+        /* Añadido #model-loading-indicator de nuevo */
         #model-loading-indicator, #model-error-message { margin-top: 5px; font-size: 0.9em; } #show-api-key { border-left: 0; }
         .download-buttons { margin-top: 15px; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
         .simulator-buttons { margin-top: 5px; margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap; }
@@ -51,9 +52,25 @@
             <div class="tab-pane fade show active" id="generator-tab" role="tabpanel" aria-labelledby="generator-nav-tab">
                 <div class="container">
                     <h1 class="mb-4 text-center">Generador Banco Preguntas GIFT Moodle</h1>
-                    <!-- Contenido del Generador (sin cambios HTML) -->
-                     <div class="form-group"> <label for="gemini-api-key">Clave API de Gemini: <a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer" title="Obtener Clave API"><i class="fas fa-question-circle text-muted"></i></a> </label> <div class="input-group"> <input type="password" class="form-control" id="gemini-api-key" placeholder="Ingresa tu clave API"> <div class="input-group-append"> <button class="btn btn-outline-secondary" type="button" id="show-api-key" title="Mostrar/Ocultar Clave"><i class="fas fa-eye"></i></button> </div> </div> <div id="model-error-message" class="text-danger" style="display: none;"></div> <div id="model-loading-indicator" class="text-muted" style="display: none;"><i class="fas fa-spinner fa-spin"></i> Cargando modelos...</div> </div>
-                     <div class="form-group"> <label for="gemini-model-select">Modelo Gemini:</label> <select class="form-control" id="gemini-model-select" disabled><option value="">Ingresa API Key válida</option></select> </div>
+                    <!-- Contenido del Generador (HTML Modificado para OpenRouter y carga dinámica) -->
+                    <div class="form-group">
+                        <label for="openrouter-api-key">Clave API de OpenRouter: <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" title="Obtener Clave API"><i class="fas fa-question-circle text-muted"></i></a> </label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="openrouter-api-key" placeholder="Ingresa tu clave API de OpenRouter (sk-or-...)">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="show-api-key" title="Mostrar/Ocultar Clave"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <!-- Mensaje de error para API Key / Carga Modelos -->
+                        <div id="model-error-message" class="text-danger" style="display: none;"></div>
+                        <!-- Indicador de carga de modelos añadido -->
+                        <div id="model-loading-indicator" class="text-muted" style="display: none;"><i class="fas fa-spinner fa-spin"></i> Cargando modelos...</div>
+                    </div>
+                     <div class="form-group">
+                         <label for="openrouter-model-select">Modelo OpenRouter:</label>
+                         <!-- Texto inicial mientras carga o si falla -->
+                         <select class="form-control" id="openrouter-model-select" disabled><option value="">Cargando modelos...</option></select>
+                     </div>
                      <div class="form-group"> <label for="quiz-topic">Descripción del Tema:</label><textarea class="form-control" id="quiz-topic" rows="4" placeholder="Ej: Conceptos básicos de redes TCP/IP para FP Grado Medio SMR&#10;Ej: Soy un profesor de Inglés. Preguntas en Inglés. Componentes blasicos del Ordenador&#10;Ej: De este texto que te pego a continuación ..."></textarea></div>
                      <div class="form-group"> <label for="question-type">Tipo Pregunta:</label> <select class="form-control" id="question-type"><option value="multiple-choice" selected>Opción Múltiple</option><option value="true-false">Verdadero/Falso</option></select> </div>
                      <div class="form-row"> <div class="form-group col-md-3 col-sm-6" id="num-questions-group"> <label for="num-questions">Nº Preguntas:</label> <select class="form-control" id="num-questions"><option value="5">5</option><option value="10" selected>10</option><option value="15">15</option><option value="20">20</option><option value="25">25</option><option value="30">30</option><option value="40">40</option><option value="50">50</option></select> </div> <div class="form-group col-md-3 col-sm-6 om-option" id="num-answers-group"> <label for="num-answers">Nº Respuestas (OM):</label> <select class="form-control" id="num-answers" title="Nº respuestas Opción Múltiple"><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select> </div> <div class="form-group col-md-3 col-sm-6 om-option" id="allow-multiple-group"> <label for="allow-multiple">Múltiples Correctas (OM):</label> <select class="form-control" id="allow-multiple" title="Permitir múltiples correctas"><option value="false" selected>No</option><option value="true">Sí</option></select> </div> <div class="form-group col-md-3 col-sm-6 om-option" id="penalty-group"> <label for="penalty">Penalización (OM):</label> <select class="form-control" id="penalty" title="Penalización por incorrecta"><option value="0.0" selected>0%</option><option value="-1.0">-100%</option><option value="-0.5">-50%</option><option value="-0.3333333">-33.3%</option><option value="-0.25">-25%</option><option value="-0.20">-20%</option></select> </div> </div>
@@ -80,76 +97,240 @@
 
     <!-- ==================== SCRIPTS ==================== -->
 
-    <!-- Script del GENERADOR GIFT -->
+    <!-- Script del GENERADOR GIFT (Modificado para Carga Dinámica de Modelos) -->
     <script>
         (function() { // IIFE Generador
             document.addEventListener('DOMContentLoaded', function () {
-                // --- Variables Generador (igual) ---
-                const loadInSimulatorButton = document.getElementById('load-in-simulator-button'); 
-                const loadSelectedInSimulatorButton = document.getElementById('load-selected-in-simulator-button'); 
-                const API_KEY = ""; // -- Poner tu API-KEY aquí --- 
-                const apiKeyInput = document.getElementById('gemini-api-key');
+                // --- Variables Generador ---
+                const loadInSimulatorButton = document.getElementById('load-in-simulator-button');
+                const loadSelectedInSimulatorButton = document.getElementById('load-selected-in-simulator-button');
+                const apiKeyInput = document.getElementById('openrouter-api-key');
                 const showApiKeyButton = document.getElementById('show-api-key');
-                const geminiModelSelect = document.getElementById('gemini-model-select');
-                const modelLoadingIndicator = document.getElementById('model-loading-indicator');
-                const modelErrorMessage = document.getElementById('model-error-message'); const quizTopicInput = document.getElementById('quiz-topic'); const generateGiftButton = document.getElementById('generate-gift'); const loadingIndicator = document.getElementById('loading-indicator'); const errorMessage = document.getElementById('error-message'); const downloadAllButton = document.getElementById('download-all-button'); const downloadSelectedButton = document.getElementById('download-selected-button'); const quizPreviewDiv = document.getElementById('quiz-preview'); const questionsPreview = document.getElementById('questions-preview'); const numQuestionsSelect = document.getElementById('num-questions'); const questionTypeSelect = document.getElementById('question-type'); const numAnswersSelect = document.getElementById('num-answers'); const allowMultipleSelect = document.getElementById('allow-multiple'); const penaltySelect = document.getElementById('penalty'); const numQuestionsGroup = document.getElementById('num-questions-group'); const numAnswersGroup = document.getElementById('num-answers-group'); const allowMultipleGroup = document.getElementById('allow-multiple-group'); const penaltyGroup = document.getElementById('penalty-group'); const omOptions = [numAnswersGroup, allowMultipleGroup, penaltyGroup]; let giftCodeGlobal = "";
+                const openRouterModelSelect = document.getElementById('openrouter-model-select');
+                const modelLoadingIndicator = document.getElementById('model-loading-indicator'); // Añadido
+                const modelErrorMessage = document.getElementById('model-error-message');
+                const quizTopicInput = document.getElementById('quiz-topic');
+                const generateGiftButton = document.getElementById('generate-gift');
+                const loadingIndicator = document.getElementById('loading-indicator');
+                const errorMessage = document.getElementById('error-message');
+                const downloadAllButton = document.getElementById('download-all-button');
+                const downloadSelectedButton = document.getElementById('download-selected-button');
+                const quizPreviewDiv = document.getElementById('quiz-preview');
+                const questionsPreview = document.getElementById('questions-preview');
+                const numQuestionsSelect = document.getElementById('num-questions');
+                const questionTypeSelect = document.getElementById('question-type');
+                const numAnswersSelect = document.getElementById('num-answers');
+                const allowMultipleSelect = document.getElementById('allow-multiple');
+                const penaltySelect = document.getElementById('penalty');
+                const numQuestionsGroup = document.getElementById('num-questions-group');
+                const numAnswersGroup = document.getElementById('num-answers-group');
+                const allowMultipleGroup = document.getElementById('allow-multiple-group');
+                const penaltyGroup = document.getElementById('penalty-group');
+                const omOptions = [numAnswersGroup, allowMultipleGroup, penaltyGroup];
+                let giftCodeGlobal = "";
 
                 // --- Funciones Generador ---
-                function updateOptionVisibility() { /* ... sin cambios ... */ const selectedType = questionTypeSelect.value; if (selectedType === 'true-false') { omOptions.forEach(el => el.style.display = 'none'); numQuestionsGroup.classList.remove('col-md-3', 'col-sm-6'); numQuestionsGroup.classList.add('col-12'); } else { omOptions.forEach(el => el.style.display = 'block'); numQuestionsGroup.classList.remove('col-12'); numQuestionsGroup.classList.add('col-md-3', 'col-sm-6'); } } questionTypeSelect.addEventListener('change', updateOptionVisibility); updateOptionVisibility();
-                async function loadModels(apiKeyToUse) {
-                    geminiModelSelect.innerHTML = '<option value="">Ingresa API Key...</option>'; geminiModelSelect.disabled = true; modelErrorMessage.style.display = 'none'; modelLoadingIndicator.style.display = 'none';
-                    const trimmedKey = apiKeyToUse ? apiKeyToUse.trim() : '';
-                    if (!trimmedKey) { geminiModelSelect.innerHTML = '<option value="">Ingresa API Key válida...</option>'; geminiModelSelect.disabled = true; return; }
+                function updateOptionVisibility() { /* ... sin cambios ... */ const selectedType = questionTypeSelect.value; if (selectedType === 'true-false') { omOptions.forEach(el => el.style.display = 'none'); numQuestionsGroup.classList.remove('col-md-3', 'col-sm-6'); numQuestionsGroup.classList.add('col-12'); } else { omOptions.forEach(el => el.style.display = 'block'); numQuestionsGroup.classList.remove('col-12'); numQuestionsGroup.classList.add('col-md-3', 'col-sm-6'); } }
+                questionTypeSelect.addEventListener('change', updateOptionVisibility);
+                updateOptionVisibility(); // Llamada inicial
+
+                // Función para obtener y poblar modelos de OpenRouter dinámicamente
+                async function fetchAndPopulateModels() {
+                    openRouterModelSelect.innerHTML = '<option value="">Cargando modelos...</option>';
+                    openRouterModelSelect.disabled = true;
                     modelLoadingIndicator.style.display = 'block';
+                    modelErrorMessage.style.display = 'none';
+                    const url = 'https://openrouter.ai/api/v1/models';
+                    const options = { method: 'GET' };
+                    const defaultModelId = "openai/gpt-4o"; // Modelo a seleccionar por defecto si existe
+
                     try {
-                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${trimmedKey}`);
-                        if (!response.ok) { let errorMsg = `Error ${response.status}`; try { const errorData = await response.json(); errorMsg = errorData.error?.message || `Error API (${response.status})`; } catch (e) { errorMsg = `Error ${response.status} al verificar API Key.`; } throw new Error(errorMsg); }
-                        const data = await response.json(); geminiModelSelect.innerHTML = '<option value="">-- Selecciona modelo --</option>';
+                        const response = await fetch(url, options);
+                        if (!response.ok) {
+                             let errorMsg = `Error ${response.status}`;
+                             try {
+                                 const errorData = await response.json();
+                                 errorMsg = `Error API Modelos: ${errorData.error?.message || `(${response.status})`}`;
+                             } catch { /* ignore json parsing error */ }
+                             throw new Error(errorMsg);
+                        }
+                        const data = await response.json();
+
+                        if (!data || !Array.isArray(data.data) || data.data.length === 0) {
+                            throw new Error("No se recibieron modelos válidos de la API.");
+                        }
+
+                        openRouterModelSelect.innerHTML = '<option value="">-- Selecciona modelo --</option>'; // Opción inicial
+
+                        // Filtrar y/o ordenar si es necesario (opcional)
+                        // const filteredModels = data.data.filter(model => model.id.includes("gpt")); // Ejemplo de filtro
+
                         let defaultModelFound = false;
-                        const preferredModelName = "gemini-2.0-flash"; // Modelo exacto que buscamos
+                        data.data.sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id)) // Ordenar por nombre
+                          .forEach(model => {
+                            const option = document.createElement('option');
+                            option.value = model.id;
+                            // Usar el nombre si existe, si no, el ID como texto
+                            option.textContent = model.name ? `${model.name} (${model.id})` : model.id;
+                            if (model.id === defaultModelId) {
+                                option.selected = true;
+                                defaultModelFound = true;
+                            }
+                            openRouterModelSelect.appendChild(option);
+                        });
 
-                        if (data.models && data.models.length > 0) {
-                            const compatibleModels = data.models.filter(model => model.supportedGenerationMethods?.includes("generateContent"));
-                            if (compatibleModels.length > 0) {
-                                compatibleModels.sort((a, b) => (a.displayName || a.name).localeCompare(b.displayName || b.name))
-                                .forEach(model => {
-                                    const option = document.createElement('option');
-                                    option.value = model.name; // e.g., "models/gemini-1.5-flash-latest"
-                                    option.textContent = model.displayName || model.name;
+                        if (!defaultModelFound && openRouterModelSelect.options.length > 1) {
+                             openRouterModelSelect.selectedIndex = 1; // Seleccionar el primero si el default no está
+                        }
 
-                                    // *** LÍNEA MODIFICADA: Comprobación exacta ***
-                                    if (model.name === 'models/' + preferredModelName) {
-                                        option.selected = true;
-                                        defaultModelFound = true;
-                                    }
-                                    // *** FIN LÍNEA MODIFICADA ***
+                        // Habilitar el select *solo si* ya hay una API key válida
+                        checkApiKeyAndToggleSelect();
 
-                                    geminiModelSelect.appendChild(option);
-                                });
-                                geminiModelSelect.disabled = false;
-                                if (!defaultModelFound && geminiModelSelect.options.length > 1) {
-                                    geminiModelSelect.selectedIndex = 1;
-                                }
-                            } else { /* ... error no compatibles ... */ geminiModelSelect.innerHTML = '<option value="">No hay modelos compatibles</option>'; throw new Error("API Key válida, pero sin modelos compatibles ('generateContent')."); }
-                        } else { /* ... error no modelos ... */ geminiModelSelect.innerHTML = '<option value="">No se encontraron modelos</option>'; throw new Error("API Key válida, pero no se devolvieron modelos."); }
-                    } catch (error) { /* ... manejo de error ... */ console.error("Error cargando modelos:", error); modelErrorMessage.textContent = `Error: ${error.message}`; modelErrorMessage.style.display = 'block'; geminiModelSelect.innerHTML = '<option value="">Error</option>'; geminiModelSelect.disabled = true; }
-                    finally { modelLoadingIndicator.style.display = 'none'; }
-                } // Fin loadModels modificado
+                    } catch (error) {
+                        console.error("Error cargando modelos de OpenRouter:", error);
+                        modelErrorMessage.textContent = `Error al cargar modelos: ${error.message}`;
+                        modelErrorMessage.style.display = 'block';
+                        openRouterModelSelect.innerHTML = '<option value="">Error al cargar</option>';
+                        openRouterModelSelect.disabled = true; // Asegurarse de que esté deshabilitado en caso de error
+                    } finally {
+                        modelLoadingIndicator.style.display = 'none';
+                    }
+                }
 
-                // --- Resto de funciones y listeners del generador (sin cambios) ---
-                if (API_KEY && API_KEY.trim() !== '') { apiKeyInput.value = API_KEY; loadModels(API_KEY); } apiKeyInput.addEventListener('blur', () => { loadModels(apiKeyInput.value); }); showApiKeyButton.addEventListener('click', () => { const isPassword = apiKeyInput.type === "password"; apiKeyInput.type = isPassword ? "text" : "password"; showApiKeyButton.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>'; });
-                function buildPayload(prompt) { /* ... sin cambios ... */ return JSON.stringify({ "contents": [ { "parts": [ { "text": prompt } ] } ], "generationConfig": { "temperature": 0.6, "maxOutputTokens": 8192, "topP": 0.95, "topK": 40 }, "safetySettings": [ { "category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE" }, { "category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE" }, { "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE" }, { "category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE" } ] }); } async function callGeminiAPI(payload) { /* ... sin cambios ... */ const currentApiKey = apiKeyInput.value.trim(); const selectedModelName = geminiModelSelect.value; if (!currentApiKey) throw new Error("Ingresa tu clave API."); if (!selectedModelName) throw new Error("Selecciona un modelo Gemini."); const apiUrl = `https://generativelanguage.googleapis.com/v1beta/${selectedModelName}:generateContent?key=${currentApiKey}`; try { const response = await fetch(apiUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: payload }); if (!response.ok) { let errorMsg = `Error ${response.status}`; try { const errorData = await response.json(); errorMsg = `Error API: ${errorData.error?.message || `(${response.status})`}`; } catch { /* ignore */ } throw new Error(errorMsg); } return await response.json(); } catch (error) { console.error("Error en callGeminiAPI:", error); throw new Error(`Fallo API Gemini: ${error.message}`); } } function extractResponse(response) { /* ... sin cambios ... */ if (response?.promptFeedback?.blockReason) { console.error("API Block:", response.promptFeedback.blockReason); throw new Error(`Solicitud bloqueada por API: ${response.promptFeedback.blockReason}. Ajusta el tema.`); } if (response?.candidates?.[0]?.content?.parts?.[0]?.text) { return response.candidates[0].content.parts[0].text; } if (response?.candidates?.[0]?.finishReason && response.candidates[0].finishReason !== "STOP") { console.warn("API Finish:", response.candidates[0].finishReason); throw new Error(`Generación incompleta (Razón: ${response.candidates[0].finishReason}).`); } throw new Error("Respuesta API inesperada o vacía."); }
-                async function generateGIFT(quizTopic, numQuestions, questionType, numAnswers, allowMultiple, penalty) { /* ... código generateGIFT igual ... */ let prompt = `Eres experto en GIFT Moodle.\nTema: "${quizTopic}"\nNº Preguntas: ${numQuestions}\nTipo: ${questionType === 'true-false' ? 'V/F' : 'Opción Múltiple'}\n\n**REGLAS GENERALES OBLIGATORIAS:**\n1. Formato GIFT Exacto.\n2. Título '::Título::'.\n3. Enunciado claro.\n4. Respuesta en '{ }'.\n5. UNA línea en blanco entre preguntas.\n6. SIN texto extra.\n7. SIN HTML/Markdown.\n\n**REGLAS ESPECÍFICAS:**\n`; if (questionType === 'true-false') { prompt += `**V/F:**\n * Enunciado afirmación.\n * Respuesta '{T}' o '{F}'.\n * Feedback opcional con '#': '{T#Feedback}' o '{F#Feedback}'.\n * NO usar '~', '=', '%'.\n Ejemplo:\n ::Ej V/F 1:: La luna es queso. {F#Es roca.}\n\n ::Ej V/F 2:: 2+2=4. {T#Correcto.}\n`; } else { const penaltyPercentage = (penalty * 100).toFixed(1); prompt += `**OPCIÓN MÚLTIPLE:**\n * Opciones: ${numAnswers}.\n * Marcadores: Correcta '=', incorrectas '~'.\n * Feedback OBLIGATORIO con '#'.\n * Penalización incorrectas (~): ~%${penaltyPercentage}%Texto #Feedback.\n`; if (allowMultiple === "true") { prompt += ` * Múltiples Correctas (=) permitidas (AL MENOS DOS).\n * Puntuación Parcial OBLIGATORIA en correctas: '=%PORCENTAJE%Texto #Feedback'. Suma debe ser 100%.\n Ejemplo Múltiple (Penalización ${penaltyPercentage}%):\n ::Colores Primarios:: ¿Cuáles son colores primarios (luz)? {\n =%33.3%Rojo #Correcto.\n ~%${penaltyPercentage}%Amarillo #Incorrecto (pigmento).\n =%33.3%Verde #Correcto.\n =%33.3%Azul #Correcto.\n }\n`; } else { prompt += ` * Única Correcta (=).\n Ejemplo Única (Penalización ${penaltyPercentage}%):\n ::Planeta Rojo:: ¿Qué planeta es rojo? {\n ~%${penaltyPercentage}%Venus #No.\n =Marte #Sí.\n ~%${penaltyPercentage}%Júpiter #No.\n ~%${penaltyPercentage}%Saturno #No.\n }\n`; } prompt += ` * Variar posición correcta.\n`; } prompt += `\n**INSTRUCCIÓN FINAL:**\nGenera EXACTAMENTE ${numQuestions} preguntas del tipo solicitado sobre "${quizTopic}" siguiendo ESTRICTAMENTE las reglas. GENERAR AHORA:\n`; const payload = buildPayload(prompt); const apiResponse = await callGeminiAPI(payload); let giftCode = extractResponse(apiResponse); giftCode = giftCode.replace(/```gift/gi, "").replace(/```/g, "").replace(/^\s*[\r\n]/, '').replace(/[\r\n]\s*$/, '').replace(/[\r\n]{3,}/g, '\n\n'); giftCodeGlobal = giftCode; return giftCode;}
+                // Función para verificar la API Key y habilitar/deshabilitar el select
+                function checkApiKeyAndToggleSelect() {
+                    const apiKeyValid = apiKeyInput.value.trim().startsWith('sk-or-');
+                    // Solo habilita si la key es válida Y hay modelos cargados (más de 1 opción incluyendo el placeholder)
+                    openRouterModelSelect.disabled = !apiKeyValid || openRouterModelSelect.options.length <= 1;
+
+                    if (!apiKeyValid && openRouterModelSelect.options.length > 1) {
+                        modelErrorMessage.textContent = 'Ingresa una API Key válida para seleccionar modelo.';
+                        modelErrorMessage.style.display = 'block';
+                    } else if (apiKeyValid) {
+                        modelErrorMessage.style.display = 'none'; // Ocultar mensaje si la key es válida
+                    }
+                    // Si la key no es válida Y aún no hay modelos, el mensaje de error de carga ya estará visible.
+                }
+
+
+                // --- Listeners y Funciones API (sin cambios en build/call/extract) ---
+                apiKeyInput.addEventListener('input', checkApiKeyAndToggleSelect); // Llama a la función de verificación al escribir
+
+                showApiKeyButton.addEventListener('click', () => { const isPassword = apiKeyInput.type === "password"; apiKeyInput.type = isPassword ? "text" : "password"; showApiKeyButton.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>'; });
+
+                // Construye el payload para la API de OpenRouter (formato Chat Completions)
+                function buildOpenRouterPayload(prompt, selectedModel) {
+                    return JSON.stringify({
+                        "model": selectedModel,
+                        "messages": [
+                            { "role": "user", "content": prompt }
+                        ]
+                        // "temperature": 0.7,
+                        // "max_tokens": 4096
+                    });
+                }
+
+                // Llama a la API de OpenRouter
+                async function callOpenRouterAPI(prompt) {
+                    const currentApiKey = apiKeyInput.value.trim();
+                    const selectedModelName = openRouterModelSelect.value;
+
+                    if (!currentApiKey) throw new Error("Ingresa tu clave API de OpenRouter.");
+                    if (!selectedModelName) throw new Error("Selecciona un modelo de OpenRouter.");
+
+                    const apiUrl = "https://openrouter.ai/api/v1/chat/completions";
+                    const payload = buildOpenRouterPayload(prompt, selectedModelName);
+                    const siteUrl = window.location.href;
+                    const siteName = document.title;
+
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: "POST",
+                            headers: {
+                                "Authorization": `Bearer ${currentApiKey}`,
+                                "Content-Type": "application/json",
+                                "HTTP-Referer": siteUrl,
+                                "X-Title": siteName
+                            },
+                            body: payload
+                        });
+                        const responseData = await response.json();
+                        if (!response.ok) {
+                            const errorMsg = responseData.error?.message || `Error HTTP ${response.status}`;
+                            throw new Error(`Error API OpenRouter: ${errorMsg}`);
+                        }
+                        return responseData;
+                    } catch (error) {
+                        console.error("Error en callOpenRouterAPI:", error);
+                        if (error instanceof TypeError) {
+                             throw new Error(`Fallo de red al contactar OpenRouter. Verifica tu conexión.`);
+                        }
+                        throw new Error(`Fallo API OpenRouter: ${error.message}`);
+                    }
+                }
+
+                // Extrae el contenido de la respuesta de OpenRouter
+                function extractOpenRouterResponse(response) {
+                    if (response?.error) {
+                         console.error("OpenRouter API Error:", response.error);
+                         throw new Error(`Error API OpenRouter: ${response.error.message}`);
+                    }
+                    if (response?.choices?.[0]?.message?.content) {
+                        return response.choices[0].message.content;
+                    }
+                    if (response?.choices?.[0]?.finish_reason && response.choices[0].finish_reason !== "stop") {
+                        console.warn("OpenRouter Finish Reason:", response.choices[0].finish_reason);
+                        throw new Error(`Generación incompleta (Razón: ${response.choices[0].finish_reason}).`);
+                    }
+                    throw new Error("Respuesta API OpenRouter inesperada o vacía.");
+                }
+
+                 // Función principal para generar el GIFT (sin cambios internos)
+                async function generateGIFT(quizTopic, numQuestions, questionType, numAnswers, allowMultiple, penalty) {
+                    // --- El prompt sigue siendo el mismo ---
+                    let prompt = `Eres experto en GIFT Moodle.\nTema: "${quizTopic}"\nNº Preguntas: ${numQuestions}\nTipo: ${questionType === 'true-false' ? 'V/F' : 'Opción Múltiple'}\n\n**REGLAS GENERALES OBLIGATORIAS:**\n1. Formato GIFT Exacto.\n2. Título '::Título::'.\n3. Enunciado claro.\n4. Respuesta en '{ }'.\n5. UNA línea en blanco entre preguntas.\n6. SIN texto extra (introducciones, despedidas, comentarios).\n7. SIN formato Markdown o HTML en el código GIFT resultante.\n\n**REGLAS ESPECÍFICAS:**\n`; if (questionType === 'true-false') { prompt += `**V/F:**\n * Enunciado afirmación.\n * Respuesta '{T}' o '{F}'.\n * Feedback opcional con '#': '{T#Feedback}' o '{F#Feedback}'.\n * NO usar '~', '=', '%'.\n Ejemplo:\n ::Ej V/F 1:: La luna es queso. {F#Es roca.}\n\n ::Ej V/F 2:: 2+2=4. {T#Correcto.}\n`; } else { const penaltyPercentage = (penalty * 100).toFixed(1); prompt += `**OPCIÓN MÚLTIPLE:**\n * Opciones: ${numAnswers}.\n * Marcadores: Correcta '=', incorrectas '~'.\n * Feedback OBLIGATORIO con '#'.\n * Penalización incorrectas (~): ~%${penaltyPercentage}%Texto #Feedback.\n`; if (allowMultiple === "true") { prompt += ` * Múltiples Correctas (=) permitidas (AL MENOS DOS).\n * Puntuación Parcial OBLIGATORIA en correctas: '=%PORCENTAJE%Texto #Feedback'. Suma debe ser 100%.\n Ejemplo Múltiple (Penalización ${penaltyPercentage}%):\n ::Colores Primarios:: ¿Cuáles son colores primarios (luz)? {\n =%33.3%Rojo #Correcto.\n ~%${penaltyPercentage}%Amarillo #Incorrecto (pigmento).\n =%33.3%Verde #Correcto.\n =%33.3%Azul #Correcto.\n }\n`; } else { prompt += ` * Única Correcta (=).\n Ejemplo Única (Penalización ${penaltyPercentage}%):\n ::Planeta Rojo:: ¿Qué planeta es rojo? {\n ~%${penaltyPercentage}%Venus #No.\n =Marte #Sí.\n ~%${penaltyPercentage}%Júpiter #No.\n ~%${penaltyPercentage}%Saturno #No.\n }\n`; } prompt += ` * Variar posición correcta.\n`; } prompt += `\n**INSTRUCCIÓN FINAL:**\nGenera EXACTAMENTE ${numQuestions} preguntas del tipo solicitado sobre "${quizTopic}" siguiendo ESTRICTAMENTE las reglas. GENERAR AHORA:\n`;
+
+                    const apiResponse = await callOpenRouterAPI(prompt);
+                    let giftCode = extractOpenRouterResponse(apiResponse);
+                    giftCode = giftCode.replace(/```gift/gi, "").replace(/```/g, "").replace(/^\s*[\r\n]/, '').replace(/[\r\n]\s*$/, '').replace(/[\r\n]{3,}/g, '\n\n');
+                    giftCodeGlobal = giftCode;
+                    return giftCode;
+                }
+
+                // --- Función Display Questions (sin cambios) ---
                 function displayQuestions(giftCode) { /* ... código displayQuestions igual ... */ questionsPreview.innerHTML = ''; quizPreviewDiv.style.display = 'none'; let questionCounter = 0; let parseErrors = 0; if (!giftCode || giftCode.trim() === "") { questionsPreview.innerHTML = '<p class="text-muted text-center">No se generaron preguntas.</p>'; quizPreviewDiv.style.display = 'block'; return 0; } const questionBlocks = giftCode.split('\n\n'); questionBlocks.forEach((questionBlock, index) => { const question = questionBlock.trim(); if (question === "") return; const questionContainer = document.createElement('div'); questionContainer.className = 'question-container'; questionContainer.dataset.questionIndex = index; const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.className = 'question-checkbox'; questionContainer.appendChild(checkbox); questionContainer.addEventListener('click', (e) => { if (e.target === questionContainer || e.target.closest('.question-container') === questionContainer && !e.target.closest('a, button')) { checkbox.checked = !checkbox.checked; questionContainer.classList.toggle('selected', checkbox.checked); } }); try { const titleMatch = question.match(/^::(.*?)::/); const titleText = titleMatch ? titleMatch[1].trim() : `Pregunta ${index + 1} (Sin Título)`; const questionBodyMatch = question.match(/^::.*?::\s*([\s\S]*?)\s*\{([\s\S]*?)\}\s*$/); if (!questionBodyMatch) throw new Error("Estructura GIFT básica no encontrada."); const questionText = questionBodyMatch[1].trim(); const optionsText = questionBodyMatch[2].trim(); questionCounter++; const questionTitleEl = document.createElement('h5'); questionTitleEl.textContent = titleText; questionContainer.appendChild(questionTitleEl); const questionParagraph = document.createElement('p'); const tempDiv = document.createElement('div'); tempDiv.textContent = questionText; questionParagraph.innerHTML = `<b>${tempDiv.innerHTML}</b>`; questionContainer.appendChild(questionParagraph); const optionsList = document.createElement('ul'); optionsList.className = 'list-unstyled'; const upperOptionsText = optionsText.toUpperCase(); let isTrueFalse = false; let tfAnswer = ''; let tfFeedback = ''; if (upperOptionsText === 'T' || upperOptionsText === 'F') { isTrueFalse = true; tfAnswer = upperOptionsText; } else if (upperOptionsText.startsWith('T#')) { isTrueFalse = true; tfAnswer = 'T'; tfFeedback = optionsText.substring(2).trim(); } else if (upperOptionsText.startsWith('F#')) { isTrueFalse = true; tfAnswer = 'F'; tfFeedback = optionsText.substring(2).trim(); } if (isTrueFalse) { const optionItem = document.createElement('li'); optionItem.className = 'answer-option'; let displayHtml = ''; if (tfAnswer === 'T') { displayHtml = '<i class="fas fa-check text-success mr-2" title="Correcta: Verdadero"></i> Verdadero'; } else { displayHtml = '<i class="fas fa-times text-danger mr-2" title="Correcta: Falso"></i> Falso'; } if (tfFeedback) { tempDiv.textContent = tfFeedback; displayHtml += ` <small class="feedback-text ml-2">(${tempDiv.innerHTML})</small>`; } optionItem.innerHTML = displayHtml; optionsList.appendChild(optionItem); } else { const optionLines = optionsText.split('\n').map(line => line.trim()).filter(line => line.startsWith('=') || line.startsWith('~')); if (optionLines.length === 0) throw new Error("No se encontraron opciones '=' o '~'."); optionLines.forEach(line => { const optionItem = document.createElement('li'); optionItem.className = 'answer-option'; const symbol = line.charAt(0); let rest = line.substring(1).trim(); let percentage = ""; let feedback = ""; let text = rest; const feedbackMatch = rest.match(/^(.*?)#(.*)$/); if (feedbackMatch) { text = feedbackMatch[1].trim(); feedback = feedbackMatch[2].trim(); } else { text = rest; } const percentageMatch = text.match(/^%(.*?)%(.*)$/); if (percentageMatch) { percentage = percentageMatch[1].trim(); text = percentageMatch[2].trim(); } let displayHtml = (symbol === '=') ? '<i class="fas fa-check text-success mr-2" title="Opción Correcta"></i>' : '<i class="fas fa-times text-danger mr-2" title="Opción Incorrecta"></i>'; tempDiv.textContent = text; displayHtml += tempDiv.innerHTML; if (percentage) { displayHtml += ` <span class="badge badge-info" title="Puntuación/Penalización">${percentage}%</span>`; } else if (symbol === '~' && !percentage && parseFloat(penaltySelect.value) !== 0.0 && questionTypeSelect.value === 'multiple-choice') { displayHtml += ` <span class="badge badge-warning" title="Penalización Implícita">${(parseFloat(penaltySelect.value) * 100).toFixed(1)}%</span>`; } if (feedback) { tempDiv.textContent = feedback; displayHtml += ` <small class="feedback-text ml-2">(${tempDiv.innerHTML})</small>`; } optionItem.innerHTML = displayHtml; optionsList.appendChild(optionItem); }); } questionContainer.appendChild(optionsList); questionsPreview.appendChild(questionContainer); } catch (parseError) { console.warn(`Error parseando bloque ${index}: "${questionBlock}"`, parseError); parseErrors++; const errorContainer = document.createElement('div'); errorContainer.className = 'question-container'; errorContainer.style.borderColor = 'red'; errorContainer.style.backgroundColor = '#f8d7da'; errorContainer.style.cursor = 'default'; errorContainer.dataset.questionIndex = index; const errorTitle = document.createElement('h5'); const titleMatch = questionBlock.match(/^::(.*?)::/); errorTitle.textContent = titleMatch ? titleMatch[1].trim() : `Pregunta ${index + 1} (Error Formato)`; errorContainer.appendChild(errorTitle); const errorP = document.createElement('p'); errorP.className = 'text-danger small mt-2'; errorP.textContent = `Error: ${parseError.message}`; errorContainer.appendChild(errorP); const codeBlock = document.createElement('pre'); codeBlock.textContent = questionBlock; codeBlock.style.cssText = 'font-size:0.8em; white-space:pre-wrap; background-color:#f1f1f1; padding:10px; margin-top:5px; border:1px dashed #dc3545;'; errorContainer.appendChild(codeBlock); questionsPreview.appendChild(errorContainer); } }); quizPreviewDiv.style.display = 'block'; if (parseErrors > 0) { const errorSummary = document.createElement('p'); errorSummary.className = 'alert alert-warning small'; errorSummary.innerHTML = `<strong>Atención:</strong> ${parseErrors} ${parseErrors === 1 ? 'pregunta' : 'preguntas'} con formato inválido (rojo).`; questionsPreview.insertBefore(errorSummary, questionsPreview.firstChild); } return questionCounter; }
-                generateGiftButton.addEventListener('click', async () => { errorMessage.style.display = 'none'; errorMessage.textContent = ''; loadingIndicator.style.display = 'block'; downloadAllButton.style.display = 'none'; downloadSelectedButton.style.display = 'none'; loadInSimulatorButton.style.display = 'none'; loadSelectedInSimulatorButton.style.display = 'none'; quizPreviewDiv.style.display = 'none'; questionsPreview.innerHTML = ''; downloadAllButton.textContent = ''; const iconAll = document.createElement('i'); iconAll.className = 'fas fa-file-download mr-1'; downloadAllButton.appendChild(iconAll); downloadAllButton.appendChild(document.createTextNode(' Descargar Todo')); const quizTopic = quizTopicInput.value.trim(); const numQuestionsRequested = numQuestionsSelect.value; const questionType = questionTypeSelect.value; const numAnswers = numAnswersSelect.value; const allowMultiple = allowMultipleSelect.value; const penalty = parseFloat(penaltySelect.value); if (!quizTopic) { errorMessage.textContent = "Ingresa descripción del tema."; errorMessage.style.display = 'block'; loadingIndicator.style.display = 'none'; return; } if (!apiKeyInput.value.trim()) { errorMessage.textContent = "Ingresa tu clave API."; errorMessage.style.display = 'block'; loadingIndicator.style.display = 'none'; return; } if (!geminiModelSelect.value) { errorMessage.textContent = "Selecciona un modelo Gemini."; errorMessage.style.display = 'block'; loadingIndicator.style.display = 'none'; return; } try { const giftCode = await generateGIFT(quizTopic, numQuestionsRequested, questionType, numAnswers, allowMultiple, penalty); const validQuestionsCount = displayQuestions(giftCode); if (giftCode.trim() !== "" && validQuestionsCount > 0) { const blobAll = new Blob([giftCode], { type: 'text/plain;charset=utf-8' }); const urlAll = URL.createObjectURL(blobAll); downloadAllButton.href = urlAll; downloadAllButton.download = `Preguntas_${validQuestionsCount}.gift`; downloadAllButton.style.display = 'inline-block'; downloadSelectedButton.style.display = 'inline-block'; loadInSimulatorButton.style.display = 'inline-block'; loadSelectedInSimulatorButton.style.display = 'inline-block'; } else if (validQuestionsCount === 0 && giftCode.trim() !== "") { errorMessage.textContent = "Se generó código, pero ninguna pregunta pudo ser interpretada."; errorMessage.style.display = 'block'; const blobAll = new Blob([giftCode], { type: 'text/plain;charset=utf-8' }); const urlAll = URL.createObjectURL(blobAll); downloadAllButton.href = urlAll; downloadAllButton.download = `Preguntas_raw_errores.gift`; downloadAllButton.textContent = ''; const iconError = document.createElement('i'); iconError.className = 'fas fa-exclamation-triangle mr-1'; downloadAllButton.appendChild(iconError); downloadAllButton.appendChild(document.createTextNode(' Descargar Código (con errores)')); downloadAllButton.style.display = 'inline-block'; downloadSelectedButton.style.display = 'none'; loadInSimulatorButton.style.display = 'none'; loadSelectedInSimulatorButton.style.display = 'none'; } } catch (error) { console.error("Error generación:", error); errorMessage.textContent = `Error: ${error.message}`; errorMessage.style.display = 'block'; quizPreviewDiv.style.display = 'none'; } finally { loadingIndicator.style.display = 'none'; } });
+
+                // --- Listener Botón Generar (Sin cambios internos) ---
+                generateGiftButton.addEventListener('click', async () => {
+                    errorMessage.style.display = 'none'; errorMessage.textContent = ''; loadingIndicator.style.display = 'block'; downloadAllButton.style.display = 'none'; downloadSelectedButton.style.display = 'none'; loadInSimulatorButton.style.display = 'none'; loadSelectedInSimulatorButton.style.display = 'none'; quizPreviewDiv.style.display = 'none'; questionsPreview.innerHTML = ''; downloadAllButton.textContent = ''; const iconAll = document.createElement('i'); iconAll.className = 'fas fa-file-download mr-1'; downloadAllButton.appendChild(iconAll); downloadAllButton.appendChild(document.createTextNode(' Descargar Todo'));
+                    const quizTopic = quizTopicInput.value.trim(); const numQuestionsRequested = numQuestionsSelect.value; const questionType = questionTypeSelect.value; const numAnswers = numAnswersSelect.value; const allowMultiple = allowMultipleSelect.value; const penalty = parseFloat(penaltySelect.value);
+
+                    // Validaciones (Incluye verificar si el select está habilitado)
+                    if (!quizTopic) { errorMessage.textContent = "Ingresa descripción del tema."; errorMessage.style.display = 'block'; loadingIndicator.style.display = 'none'; return; }
+                    if (!apiKeyInput.value.trim() || !apiKeyInput.value.trim().startsWith('sk-or-')) { errorMessage.textContent = "Ingresa una clave API de OpenRouter válida."; errorMessage.style.display = 'block'; loadingIndicator.style.display = 'none'; return; }
+                    if (openRouterModelSelect.disabled || !openRouterModelSelect.value) { errorMessage.textContent = "Selecciona un modelo de OpenRouter (asegúrate de tener una API Key válida)."; errorMessage.style.display = 'block'; loadingIndicator.style.display = 'none'; return; }
+
+                    try {
+                        const giftCode = await generateGIFT(quizTopic, numQuestionsRequested, questionType, numAnswers, allowMultiple, penalty);
+                        const validQuestionsCount = displayQuestions(giftCode);
+                        // Lógica de botones (igual)
+                        if (giftCode.trim() !== "" && validQuestionsCount > 0) { const blobAll = new Blob([giftCode], { type: 'text/plain;charset=utf-8' }); const urlAll = URL.createObjectURL(blobAll); downloadAllButton.href = urlAll; downloadAllButton.download = `Preguntas_${validQuestionsCount}.gift`; downloadAllButton.style.display = 'inline-block'; downloadSelectedButton.style.display = 'inline-block'; loadInSimulatorButton.style.display = 'inline-block'; loadSelectedInSimulatorButton.style.display = 'inline-block'; } else if (validQuestionsCount === 0 && giftCode.trim() !== "") { errorMessage.textContent = "Se generó código, pero ninguna pregunta pudo ser interpretada correctamente en formato GIFT."; errorMessage.style.display = 'block'; const blobAll = new Blob([giftCode], { type: 'text/plain;charset=utf-8' }); const urlAll = URL.createObjectURL(blobAll); downloadAllButton.href = urlAll; downloadAllButton.download = `Preguntas_raw_errores.gift`; downloadAllButton.textContent = ''; const iconError = document.createElement('i'); iconError.className = 'fas fa-exclamation-triangle mr-1'; downloadAllButton.appendChild(iconError); downloadAllButton.appendChild(document.createTextNode(' Descargar Código (con errores)')); downloadAllButton.style.display = 'inline-block'; downloadSelectedButton.style.display = 'none'; loadInSimulatorButton.style.display = 'none'; loadSelectedInSimulatorButton.style.display = 'none'; }
+                    } catch (error) { console.error("Error generación:", error); errorMessage.textContent = `Error: ${error.message}`; errorMessage.style.display = 'block'; quizPreviewDiv.style.display = 'none'; } finally { loadingIndicator.style.display = 'none'; }
+                });
+
+                // --- Listeners Botones Descarga/Simulador (sin cambios) ---
                 downloadSelectedButton.addEventListener('click', (event) => { /* ... sin cambios ... */ event.preventDefault(); let selectedQuestionsGIFT = []; const allQuestionBlocks = giftCodeGlobal.split('\n\n'); const displayedValidContainers = questionsPreview.querySelectorAll('.question-container:not([style*="border-color: red"])'); displayedValidContainers.forEach(container => { const checkbox = container.querySelector('.question-checkbox'); const originalIndex = container.dataset.questionIndex; if (checkbox?.checked && originalIndex !== undefined && allQuestionBlocks[originalIndex]) { selectedQuestionsGIFT.push(allQuestionBlocks[originalIndex].trim()); } }); if (selectedQuestionsGIFT.length === 0) { alert("No has seleccionado preguntas válidas."); return; } const selectedGiftCode = selectedQuestionsGIFT.join('\n\n'); const blob = new Blob([selectedGiftCode], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Preguntas_Seleccionadas_${selectedQuestionsGIFT.length}.gift`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); });
                 loadInSimulatorButton.addEventListener('click', () => { if (giftCodeGlobal && giftCodeGlobal.trim() !== '') { if (typeof window.loadSimulatorWithGIFT === 'function') { window.loadSimulatorWithGIFT(giftCodeGlobal); $('#simulator-nav-tab').tab('show'); } else { console.error("Error: La función loadSimulatorWithGIFT no está definida."); alert("Error al cargar en simulador."); } } else { alert("Primero genera preguntas."); } });
                 loadSelectedInSimulatorButton.addEventListener('click', () => { /* ... código carga selección igual ... */ let selectedQuestionsGIFT = []; const allQuestionBlocks = giftCodeGlobal.split('\n\n'); const displayedValidContainers = questionsPreview.querySelectorAll('.question-container:not([style*="border-color: red"])'); displayedValidContainers.forEach(container => { const checkbox = container.querySelector('.question-checkbox'); const originalIndex = container.dataset.questionIndex; if (checkbox?.checked && originalIndex !== undefined && allQuestionBlocks[originalIndex]) { selectedQuestionsGIFT.push(allQuestionBlocks[originalIndex].trim()); } }); if (selectedQuestionsGIFT.length === 0) { alert("No has seleccionado preguntas válidas para cargar."); return; } const selectedGiftCode = selectedQuestionsGIFT.join('\n\n'); if (typeof window.loadSimulatorWithGIFT === 'function') { window.loadSimulatorWithGIFT(selectedGiftCode, `Selección de ${selectedQuestionsGIFT.length} preguntas`); $('#simulator-nav-tab').tab('show'); } else { console.error("Error: La función loadSimulatorWithGIFT no está definida."); alert("Error al cargar la selección."); } });
-            });
-        })();
+
+                // --- Inicialización ---
+                fetchAndPopulateModels(); // Llama para cargar los modelos al iniciar
+
+            }); // Fin DOMContentLoaded Generador
+        })(); // Fin IIFE Generador
     </script>
 
-    <!-- Script del SIMULADOR GIFT -->
+    <!-- Script del SIMULADOR GIFT (Sin Cambios) -->
      <script>
         (function() { // IIFE Simulador
             let simSubmissionMade = false;
